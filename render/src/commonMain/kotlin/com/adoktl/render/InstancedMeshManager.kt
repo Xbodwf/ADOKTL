@@ -9,13 +9,13 @@ import com.adoktl.math.Vector2
 data class TileInstanceData(
     val index: Int,
     val shapeKey: String,
-    val position: Vector2,
-    val rotation: Double,
-    val scaleX: Double,
-    val scaleY: Double,
-    val color: AdoktlColor,
-    val bgColor: AdoktlColor,
-    val opacity: Float,
+    var position: Vector2,
+    var rotation: Double,
+    var scaleX: Double,
+    var scaleY: Double,
+    var color: AdoktlColor,
+    var bgColor: AdoktlColor,
+    var opacity: Float,
     val texSeed: Int,
     var visible: Boolean = true
 )

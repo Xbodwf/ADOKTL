@@ -2,10 +2,6 @@ package com.adoktl.render
 
 import com.adoktl.math.AdoktlColor
 
-/**
- * Icon sprite for event markers (Twirl, Speed+, Speed-, End).
- * Port of IconLoader.ts from Re_ADOJAS.
- */
 object IconLoader {
 
     private val iconCache = mutableMapOf<IconType, IconData>()
@@ -77,11 +73,11 @@ object IconLoader {
                     val bar = ((dx + cx) % (barWidth * 2) < barWidth)
                     val normDist = dist / (size / 2)
                     if (bar && normDist > 0.3) {
-                        pixels[idx] = 255; pixels[idx + 1] = 255
-                        pixels[idx + 2] = 255; pixels[idx + 3] = (255 * (1.0 - normDist * 0.3)).toInt().toByte()
+                        pixels[idx] = 255.toByte(); pixels[idx + 1] = 255.toByte()
+                        pixels[idx + 2] = 255.toByte(); pixels[idx + 3] = (255 * (1.0 - normDist * 0.3)).toInt().toByte()
                     } else {
-                        pixels[idx] = 100; pixels[idx + 1] = 100
-                        pixels[idx + 2] = 100; pixels[idx + 3] = (200 * (1.0 - normDist * 0.5)).toInt().toByte()
+                        pixels[idx] = 100.toByte(); pixels[idx + 1] = 100.toByte()
+                        pixels[idx + 2] = 100.toByte(); pixels[idx + 3] = (200 * (1.0 - normDist * 0.5)).toInt().toByte()
                     }
                 }
             }
@@ -97,8 +93,8 @@ object IconLoader {
                 val isVertical = kotlin.math.abs(x - cx) <= 2 && y in 4 until size - 4
                 val isHorizontal = kotlin.math.abs(y - cy) <= 2 && x in 4 until size - 4
                 if (isVertical || isHorizontal) {
-                    pixels[idx] = 255; pixels[idx + 1] = 200
-                    pixels[idx + 2] = 0; pixels[idx + 3] = 255
+                    pixels[idx] = 255.toByte(); pixels[idx + 1] = 200.toByte()
+                    pixels[idx + 2] = 0.toByte(); pixels[idx + 3] = 255.toByte()
                 }
             }
         }
@@ -111,8 +107,8 @@ object IconLoader {
                 val idx = (y * size + x) * 4
                 val isHorizontal = kotlin.math.abs(y - cx) <= 2 && x in 4 until size - 4
                 if (isHorizontal) {
-                    pixels[idx] = 255; pixels[idx + 1] = 100
-                    pixels[idx + 2] = 0; pixels[idx + 3] = 255
+                    pixels[idx] = 255.toByte(); pixels[idx + 1] = 100.toByte()
+                    pixels[idx + 2] = 0.toByte(); pixels[idx + 3] = 255.toByte()
                 }
             }
         }
@@ -134,7 +130,7 @@ object IconLoader {
                     val angle = kotlin.math.atan2(dy.toDouble(), dx.toDouble()) % (kotlin.math.PI / 2)
                     if (kotlin.math.abs(angle) < 0.3) {
                         pixels[idx] = r.toByte(); pixels[idx + 1] = g.toByte()
-                        pixels[idx + 2] = b.toByte(); pixels[idx + 3] = 255
+                        pixels[idx + 2] = b.toByte(); pixels[idx + 3] = 255.toByte()
                     }
                 }
             }
