@@ -83,7 +83,7 @@ compose.desktop {
 
             windows {
                 menuGroup = "ADOKTL"
-                upgradeUuid = "adoktl-player-0000-0000-0000-000000000000"
+                upgradeUuid = "a1b2c3d4-e5f6-7890-abcd-ef0123456789"
             }
 
             macOS {
