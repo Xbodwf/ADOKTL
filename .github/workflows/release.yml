@@ -1,0 +1,162 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
+  JAVA_VERSION: "17"
+
+jobs:
+  android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.android/cache
+          key: ${{ runner.os }}-release-android-${{ hashFiles('**/*.gradle.kts', '**/libs.versions.toml', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-release-android-
+            ${{ runner.os }}-gradle-
+
+      - name: Build Android Release APK
+        run: ./gradlew :platform:android:app:assembleRelease --stacktrace
+
+      - name: Build Android Release AAB
+        run: ./gradlew :platform:android:app:bundleRelease --stacktrace
+
+      - name: Build XAPK (sideload)
+        run: ./gradlew :platform:android:app:packageReleaseXapk --stacktrace
+
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: adoktl-${{ github.ref_name }}-android
+          path: |
+            platform/android/app/build/outputs/apk/release/**/*.apk
+            platform/android/app/build/outputs/bundle/release/**/*.aab
+            platform/android/app/build/outputs/xapk/*.xapk
+
+  linux:
+    name: Build Linux .deb
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-release-linux-${{ hashFiles('**/*.gradle.kts', '**/libs.versions.toml', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-release-linux-
+            ${{ runner.os }}-gradle-
+
+      - name: Build Linux .deb
+        run: ./gradlew :platform:desktop:packageDeb --stacktrace
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: adoktl-${{ github.ref_name }}-linux
+          path: platform/desktop/build/compose/binaries/main/deb/*.deb
+
+  windows:
+    name: Build Windows .msi
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-release-windows-${{ hashFiles('**/*.gradle.kts', '**/libs.versions.toml', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-release-windows-
+            ${{ runner.os }}-gradle-
+
+      - name: Install WiX Toolset
+        run: choco install wixtoolset --no-progress -y
+
+      - name: Build Windows .msi
+        run: ./gradlew :platform:desktop:packageMsi --stacktrace
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: adoktl-${{ github.ref_name }}-windows
+          path: platform/desktop/build/compose/binaries/main/msi/*.msi
+
+  release:
+    name: Create GitHub Release
+    needs: [android, linux, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: adoktl-${{ github.ref_name }}-*
+          merge-multiple: true
+          path: release-artifacts
+
+      - name: List artifacts
+        run: ls -laR release-artifacts/
+
+      - name: Detect prerelease
+        id: prerelease
+        run: |
+          if [[ "${{ github.ref_name }}" =~ -(rc|beta|alpha)[0-9]*$ ]]; then
+            echo "detected=true" >> $GITHUB_OUTPUT
+          else
+            echo "detected=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ADOKTL ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body: |
+            ## ADOKTL ${{ github.ref_name }}
+
+            ### Downloads
+            - **Android APK**: `adoktl-android-v*.apk`
+            - **Android AAB** (Play Store): `adoktl-android-v*.aab`
+            - **Android XAPK** (sideloading): `adoktl-android-v*.xapk`
+            - **Windows**: `adoktl-windows-v*.msi`
+            - **Linux**: `adoktl-linux-v*.deb`
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ steps.prerelease.outputs.detected }}
+          files: release-artifacts/*
