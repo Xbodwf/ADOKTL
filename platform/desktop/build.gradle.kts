@@ -84,9 +84,7 @@ compose.desktop {
                 deb {
                     packageVersion = "0.1.0-1"
                 }
-                rpm {
-                    packageVersion = "0.1.0-1"
-                }
+                rpmPackageVersion = "0.1.0-1"
             }
 
             windows {
