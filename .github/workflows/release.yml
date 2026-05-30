@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build Android Release APK
-        run: ./gradlew :platform:android:app:assembleRelease --stacktrace
+        run: chmod +x gradlew && ./gradlew :platform:android:app:assembleRelease --stacktrace
 
       - name: Build Android Release AAB
         run: ./gradlew :platform:android:app:bundleRelease --stacktrace
@@ -75,7 +75,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build Linux .deb
-        run: ./gradlew :platform:desktop:packageDeb --stacktrace
+        run: chmod +x gradlew && ./gradlew :platform:desktop:packageDeb --stacktrace
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -108,7 +108,7 @@ jobs:
         run: choco install wixtoolset --no-progress -y
 
       - name: Build Windows .msi
-        run: ./gradlew :platform:desktop:packageMsi --stacktrace
+        run: chmod +x gradlew && ./gradlew :platform:desktop:packageMsi --stacktrace
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4

@@ -6,13 +6,6 @@ plugins {
 
 kotlin {
     jvm()
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-    }
 
     sourceSets {
         val commonMain by getting {
@@ -27,7 +20,6 @@ kotlin {
             }
         }
         val jvmMain by getting
-        val androidMain by getting
     }
 }
 
