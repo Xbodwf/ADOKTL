@@ -1,3 +1,7 @@
+import java.io.FileOutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.multiplatform)
@@ -8,8 +12,8 @@ plugins {
 kotlin {
     androidTarget {
         compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
+            compilerOptions {
+                jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
             }
         }
     }
@@ -40,7 +44,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = "1.0.0"
     }
 
     compileOptions {
@@ -57,9 +61,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
-    isApkPerAbi.set(true)
 }
+
+val appVersionName: String by android.defaultConfig
+val appVersionCode: Int by android.defaultConfig
 
 tasks.register<Copy>("packageReleaseXapk") {
     group = "build"
@@ -67,6 +72,7 @@ tasks.register<Copy>("packageReleaseXapk") {
 
     dependsOn("assembleRelease")
 
+    val buildDir = layout.buildDirectory.get().asFile
     val apkFile = file("${buildDir}/outputs/apk/release/release/${project.name}-release.apk")
     val outDir = file("${buildDir}/outputs/xapk")
 
@@ -82,8 +88,8 @@ tasks.register<Copy>("packageReleaseXapk") {
             {
               "app_name": "ADOKTL",
               "package_name": "com.adoktl.android",
-              "version_name": "${versionName}",
-              "version_code": ${versionCode},
+              "version_name": "${appVersionName}",
+              "version_code": ${appVersionCode},
               "min_sdk_version": 26,
               "target_sdk_version": 35,
               "split_config": [],
@@ -95,16 +101,16 @@ tasks.register<Copy>("packageReleaseXapk") {
     }
 
     doLast {
-        val xapkFile = file("${outDir}/${project.name}-${versionName}.xapk")
+        val xapkFile = file("${outDir}/${project.name}-${appVersionName}.xapk")
         val manifestBytes = file("${outDir}/manifest.json").readBytes()
         val apkBytes = apkFile.readBytes()
 
-        java.util.zip.ZipOutputStream(java.io.FileOutputStream(xapkFile)).use { zos ->
-            zos.putNextEntry(java.util.zip.ZipEntry("manifest.json"))
+        ZipOutputStream(FileOutputStream(xapkFile)).use { zos ->
+            zos.putNextEntry(ZipEntry("manifest.json"))
             zos.write(manifestBytes)
             zos.closeEntry()
 
-            zos.putNextEntry(java.util.zip.ZipEntry("app.apk"))
+            zos.putNextEntry(ZipEntry("app.apk"))
             zos.write(apkBytes)
             zos.closeEntry()
         }
@@ -120,10 +126,10 @@ tasks.register<Zip>("packageDebugApks") {
 
     dependsOn("assembleDebug")
 
-    archiveFileName.set("${project.name}-${versionName}-debug.apks")
-    destinationDirectory.set(file("${buildDir}/outputs/apks"))
+    archiveFileName.set("${project.name}-${appVersionName}-debug.apks")
+    destinationDirectory.set(layout.buildDirectory.dir("outputs/apks"))
 
-    from("${buildDir}/outputs/apk/debug") {
+    from(layout.buildDirectory.dir("outputs/apk/debug")) {
         include("**/*.apk")
     }
 }
