@@ -43,7 +43,6 @@ kotlin {
                 implementation("org.lwjgl:lwjgl:${libs.versions.lwjgl.get()}:natives-linux")
                 implementation("org.lwjgl:lwjgl-glfw:${libs.versions.lwjgl.get()}:natives-linux")
                 implementation("org.lwjgl:lwjgl-opengl:${libs.versions.lwjgl.get()}:natives-linux")
-                implementation(compose.desktop.currentOs)
             }
         }
 
@@ -55,7 +54,6 @@ kotlin {
                 implementation("org.lwjgl:lwjgl:${libs.versions.lwjgl.get()}:natives-windows")
                 implementation("org.lwjgl:lwjgl-glfw:${libs.versions.lwjgl.get()}:natives-windows")
                 implementation("org.lwjgl:lwjgl-opengl:${libs.versions.lwjgl.get()}:natives-windows")
-                implementation(compose.desktop.currentOs)
             }
         }
     }
