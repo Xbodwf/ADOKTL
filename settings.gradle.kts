@@ -14,7 +14,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ADOKTL"
-includeBuild("libs/adofai-json-parser")
 
 include(":core")
 include(":render")
