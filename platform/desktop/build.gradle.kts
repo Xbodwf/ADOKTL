@@ -81,9 +81,7 @@ compose.desktop {
 
             linux {
                 packageName = "adoktl"
-                deb {
-                    packageVersion = "0.1.0-1"
-                }
+                debPackageVersion = "0.1.0-1"
                 rpmPackageVersion = "0.1.0-1"
             }
 
