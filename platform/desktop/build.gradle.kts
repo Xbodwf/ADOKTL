@@ -26,9 +26,9 @@ kotlin {
                 implementation(libs.lwjgl.core)
                 implementation(libs.lwjgl.glfw)
                 implementation(libs.lwjgl.opengl)
-                implementation(libs.lwjgl.natives.windows)
-                implementation(libs.lwjgl.glfw.natives.windows)
-                implementation(libs.lwjgl.opengl.natives.windows)
+                implementation("org.lwjgl:lwjgl:${libs.versions.lwjgl.get()}:natives-windows")
+                implementation("org.lwjgl:lwjgl-glfw:${libs.versions.lwjgl.get()}:natives-windows")
+                implementation("org.lwjgl:lwjgl-opengl:${libs.versions.lwjgl.get()}:natives-windows")
                 implementation(libs.compose.material3)
                 implementation(libs.compose.ui)
                 implementation(libs.compose.foundation)
@@ -41,9 +41,9 @@ kotlin {
                 implementation(libs.lwjgl.core)
                 implementation(libs.lwjgl.glfw)
                 implementation(libs.lwjgl.opengl)
-                implementation(libs.lwjgl.natives.linux)
-                implementation(libs.lwjgl.glfw.natives.linux)
-                implementation(libs.lwjgl.opengl.natives.linux)
+                implementation("org.lwjgl:lwjgl:${libs.versions.lwjgl.get()}:natives-linux")
+                implementation("org.lwjgl:lwjgl-glfw:${libs.versions.lwjgl.get()}:natives-linux")
+                implementation("org.lwjgl:lwjgl-opengl:${libs.versions.lwjgl.get()}:natives-linux")
                 implementation(compose.desktop.currentOs)
             }
         }
@@ -53,9 +53,9 @@ kotlin {
                 implementation(libs.lwjgl.core)
                 implementation(libs.lwjgl.glfw)
                 implementation(libs.lwjgl.opengl)
-                implementation(libs.lwjgl.natives.windows)
-                implementation(libs.lwjgl.glfw.natives.windows)
-                implementation(libs.lwjgl.opengl.natives.windows)
+                implementation("org.lwjgl:lwjgl:${libs.versions.lwjgl.get()}:natives-windows")
+                implementation("org.lwjgl:lwjgl-glfw:${libs.versions.lwjgl.get()}:natives-windows")
+                implementation("org.lwjgl:lwjgl-opengl:${libs.versions.lwjgl.get()}:natives-windows")
                 implementation(compose.desktop.currentOs)
             }
         }
