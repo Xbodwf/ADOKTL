@@ -70,8 +70,8 @@ compose.desktop {
             targetFormats(
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,
-                org.jetbrains.compose.desktop.application.dsl.TargetFormat.LinuxRpm,
-                org.jetbrains.compose.desktop.application.dsl.TargetFormat.LinuxDeb,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Rpm,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.AppImage
             )
             packageName = "ADOKTL"
@@ -81,8 +81,12 @@ compose.desktop {
 
             linux {
                 packageName = "adoktl"
-                debPackageVersion = "0.1.0-1"
-                linuxRpmPackageVersion = "0.1.0-1"
+                deb {
+                    packageVersion = "0.1.0-1"
+                }
+                rpm {
+                    packageVersion = "0.1.0-1"
+                }
             }
 
             windows {
