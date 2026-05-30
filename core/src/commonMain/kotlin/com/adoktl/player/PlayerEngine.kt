@@ -114,8 +114,8 @@ class PlayerEngine(
                 }
 
                 val frameTime = currentTimeMillis() - frameStart
-                val sleepTime = (frameDuration * 1000 - frameTime).coerceAtLeast(0L)
-                delay(sleepTime)
+                val sleepTime = (frameDuration * 1000 - frameTime).coerceAtLeast(0.0)
+                delay(sleepTime.toLong())
             }
         }
     }
@@ -193,8 +193,8 @@ class PlayerEngine(
                 }
 
                 val frameTime = currentTimeMillis() - frameStart
-                val sleepTime = (frameDuration * 1000 - frameTime).coerceAtLeast(0L)
-                delay(sleepTime)
+                val sleepTime = (frameDuration * 1000 - frameTime).coerceAtLeast(0.0)
+                delay(sleepTime.toLong())
             }
         }
     }
