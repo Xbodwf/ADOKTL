@@ -75,7 +75,7 @@ compose.desktop {
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.AppImage
             )
             packageName = "ADOKTL"
-            packageVersion = "0.1.0"
+            packageVersion = "1.0.0"
             description = "A Dance of Fire and Ice - Kotlin Player"
             vendor = "ADOKTL"
 
