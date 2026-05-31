@@ -12,11 +12,11 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.window.FileDialog
-import androidx.compose.ui.window.FileDialogMode
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import java.awt.FileDialog
+import java.awt.Frame
 import com.adoktl.ui.ADOKTLApp
 import com.adoktl.ui.ComposeGameView
 import com.adoktl.ui.FilePickResult
@@ -68,21 +68,18 @@ fun DesktopFilePickerButton(onResult: (FilePickResult) -> Unit) {
     }
 
     if (showDialog) {
-        FileDialog(
-            onCloseRequest = { showDialog = false },
-            onFileSelected = { file ->
-                showDialog = false
-                try {
-                    val json = file.readText()
-                    onResult(FilePickResult(json, file.name))
-                    DebugLog.log("Loaded level: ${file.absolutePath}")
-                } catch (e: Exception) {
-                    DebugLog.log("Failed to load level: ${e.message}")
-                }
-            },
-            title = "Select ADOFAI Level",
-            mode = FileDialogMode.Open,
-            initialDirectory = System.getProperty("user.home")
-        )
+        val dialog = FileDialog(null as Frame?, "Select ADOFAI Level", FileDialog.LOAD)
+        dialog.isVisible = true
+        showDialog = false
+        if (dialog.file != null) {
+            val file = File(dialog.directory, dialog.file)
+            try {
+                val json = file.readText()
+                onResult(FilePickResult(json, file.name))
+                DebugLog.log("Loaded level: ${file.absolutePath}")
+            } catch (e: Exception) {
+                DebugLog.log("Failed to load level: ${e.message}")
+            }
+        }
     }
 }
