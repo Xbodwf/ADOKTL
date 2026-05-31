@@ -137,13 +137,33 @@ jobs:
         run: chmod +x gradlew && ./gradlew :platform:desktop:createDistributable --stacktrace
 
       - name: Package JVM distributable as tar.gz
-        run: tar -czf adoktl-${{ github.ref_name }}-desktop-jvm.tar.gz -C platform/desktop/build/compose/binaries/main/distributable/ .
+        run: |
+          BASE="platform/desktop/build/compose/binaries/main"
+          # Try direct path first, then nested with package name
+          if [ -d "$BASE/distributable" ]; then
+            echo "Packaging from: $BASE/distributable"
+            tar -czf adoktl-${{ github.ref_name }}-desktop-jvm.tar.gz -C "$BASE/distributable" .
+          elif [ -d "$BASE/distributable/ADOKTL" ]; then
+            echo "Packaging from: $BASE/distributable/ADOKTL"
+            tar -czf adoktl-${{ github.ref_name }}-desktop-jvm.tar.gz -C "$BASE/distributable/ADOKTL" .
+          else
+            echo "=== Searching for distributable ==="
+            find "$BASE" -type d -maxdepth 5 2>/dev/null
+            # Fallback: package all jars as flat tar
+            mkdir -p dist-jvm
+            cp -r "$BASE/distributable" dist-jvm/ 2>/dev/null || true
+            find platform/desktop/build -name "*.jar" -path "*/jvm/*" -exec cp {} dist-jvm/ \; 2>/dev/null || true
+            ls -laR dist-jvm/
+            tar -czf adoktl-${{ github.ref_name }}-desktop-jvm.tar.gz -C dist-jvm .
+          fi
 
       - name: Upload JVM distributable artifact
         uses: actions/upload-artifact@v4
         with:
           name: adoktl-${{ github.ref_name }}-desktop-jvm
-          path: adoktl-${{ github.ref_name }}-desktop-jvm.tar.gz
+          path: |
+            adoktl-${{ github.ref_name }}-desktop-jvm.tar.gz
+            dist-jvm/
 
   release:
     name: Create GitHub Release
