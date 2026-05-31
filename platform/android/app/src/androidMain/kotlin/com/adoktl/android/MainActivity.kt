@@ -9,13 +9,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adoktl.ui.ADOKTLApp
+import com.adoktl.ui.ComposeGameView
 import com.adoktl.ui.FilePickResult
+import com.adoktl.ui.rememberPlayerEngine
 import com.adoktl.util.DebugLog
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     AndroidFilePickerButton(onResult = onResult)
                 },
                 gameViewFactory = { levelJson ->
-                    AndroidGameView(levelJson)
+                    ComposeGameView(playerEngine = rememberPlayerEngine(levelJson))
                 }
             )
         }
@@ -88,19 +89,5 @@ fun AndroidFilePickerButton(onResult: (FilePickResult) -> Unit) {
         modifier = Modifier.width(220.dp).height(48.dp)
     ) {
         Text(if (isPicking) "Opening..." else "Browse Files", fontSize = 16.sp)
-    }
-}
-
-@Composable
-fun AndroidGameView(levelJson: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Game Rendering (OpenGL)\nNot yet implemented in Compose",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
